@@ -1,0 +1,8 @@
+# Exclude Activities folder
+Activities/
+
+# Exclude all .md files
+*.md
+
+# But include README.md
+!README.md
