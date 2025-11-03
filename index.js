@@ -312,7 +312,7 @@ messageInput.addEventListener('input', () => {
 });
 
 // Form submission
-contactForm.addEventListener('submit', (e) => {
+contactForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     // Clear all previous errors
@@ -341,26 +341,51 @@ contactForm.addEventListener('submit', (e) => {
         showError(messageInput, messageError);
         isValid = false;
     }
+
     if (isValid) {
-        // Form is valid, show success message
-        console.log('Form submitted successfully!');
-        console.log('Name:', nameInput.value);
-        console.log('Email:', emailInput.value);
-        console.log('Subject:', document.getElementById('subject').value);
-        console.log('Message:', messageInput.value);
+        // Disable submit button and show loading state
+        const submitBtn = contactForm.querySelector('.submit-btn');
+        const originalBtnText = submitBtn.textContent;
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Sending...';
 
-        // Show success modal instead of alert
-        showSuccessModal();
+        try {
+            // Submit form data to Web3Forms
+            const formData = new FormData(contactForm);
+            const response = await fetch('https://api.web3forms.com/submit', {
+                method: 'POST',
+                body: formData
+            });
 
-        // Reset form
-        contactForm.reset();
+            const data = await response.json();
 
-        // Auto-close modal after 5 seconds
-        setTimeout(() => {
-            if (successModal.classList.contains('active')) {
-                closeSuccessModal();
+            if (data.success) {
+                console.log('Form submitted successfully!');
+                
+                // Show success modal
+                showSuccessModal();
+
+                // Reset form
+                contactForm.reset();
+
+                // Auto-close modal after 5 seconds
+                setTimeout(() => {
+                    if (successModal.classList.contains('active')) {
+                        closeSuccessModal();
+                    }
+                }, 5000);
+            } else {
+                console.error('Form submission error:', data);
+                alert('Sorry, there was an error sending your message. Please try again or email me directly at skouny@gmail.com');
             }
-        }, 5000);
+        } catch (error) {
+            console.error('Form submission error:', error);
+            alert('Sorry, there was an error sending your message. Please try again or email me directly at skouny@gmail.com');
+        } finally {
+            // Re-enable submit button
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalBtnText;
+        }
     } else {
         // Focus on first error field
         if (nameError) {

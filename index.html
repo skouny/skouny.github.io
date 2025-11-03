@@ -309,7 +309,13 @@
                     vision.
                     Feel free to reach out!
                 </p>
-                <form class="contact-form" aria-label="Contact form">
+                <form class="contact-form" aria-label="Contact form" action="https://api.web3forms.com/submit"
+                    method="POST">
+                    <!-- Web3Forms Access Key - Replace with your own from https://web3forms.com -->
+                    <input type="hidden" name="access_key" value="685febfd-d290-4971-a7a6-29fcfe31cdab">
+                    <input type="hidden" name="subject" value="New Contact Form Submission from Portfolio">
+                    <input type="hidden" name="from_name" value="Portfolio Contact Form">
+
                     <div class="form-group">
                         <label for="name">Name <span aria-label="required">*</span></label>
                         <input type="text" id="name" name="name" required aria-required="true"
